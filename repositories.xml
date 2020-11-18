@@ -1,6 +1,6 @@
 <repositories encoding="unicode" version="1.1">
   <repo priority="50" quality="experimental">
-    <name>harwiltz-rocm</name>
+    <name>rocm</name>
     <description>Ebuilds to install ROCM on Gentoo</description>
     <homepage>https://bugs.gentoo.org/650804</homepage>
     <owner>
