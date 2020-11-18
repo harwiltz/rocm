@@ -1,12 +1,12 @@
 <repositories encoding="unicode" version="1.1">
   <repo priority="50" quality="experimental">
-    <name>rocm</name>
+    <name>harwiltz-rocm</name>
     <description>Ebuilds to install ROCM on Gentoo</description>
     <homepage>https://bugs.gentoo.org/650804</homepage>
     <owner>
-      <email>gentoo@holzke.net</email>
-      <name>justXi</name>
+      <email>harley.wiltzer@mail.mcgill.ca</email>
+      <name>harwiltz</name>
     </owner>
-    <source type="git">https://github.com/justxi/rocm.git</source>
+    <source type="git">https://github.com/harwiltz/rocm.git</source>
   </repo>
 </repositories>
