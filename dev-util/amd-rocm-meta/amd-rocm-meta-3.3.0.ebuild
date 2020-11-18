@@ -7,8 +7,7 @@ SLOT="0/$(ver_cut 1-2)"
 
 KEYWORDS="~amd64"
 
-IUSE="debug-tools hip opencl profiling"
-# science
+IUSE="debug-tools hip opencl profiling science"
 
 RDEPEND="
 	=dev-util/rocminfo-$(ver_cut 1-2)*
