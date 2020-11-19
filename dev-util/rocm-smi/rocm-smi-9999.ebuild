@@ -7,7 +7,7 @@ DESCRIPTION="ROCm System Management Interface"
 HOMEPAGE="https://github.com/RadeonOpenCompute/ROC-smi"
 
 if [[ ${PV} == *9999 ]] ; then
-	KEYWORDS="**"
+	KEYWORDS="~amd64"
 	inherit git-r3
 	EGIT_REPO_URI="https://github.com/RadeonOpenCompute/ROC-smi"
 	EGIT_BRANCH="master"

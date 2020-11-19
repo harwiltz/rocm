@@ -12,7 +12,7 @@ if [[ ${PV} == *9999 ]] ; then
 	EGIT_BRANCH="master"
 	inherit git-r3
 	S="${WORKDIR}/${P}"
-	KEYWORDS="**"
+	KEYWORDS="~amd64"
 else
 	SRC_URI="https://github.com/ROCm-Developer-Tools/HIP/archive/roc-${PV}.tar.gz -> rocm-hip-${PV}.tar.gz"
 	S="${WORKDIR}/HIP-roc-${PV}"
@@ -25,8 +25,8 @@ SLOT="0/$(ver_cut 1-2)"
 IUSE="debug +hipify +hcc-backend llvm-roc-backend"
 REQUIRED_USE="^^ ( hcc-backend llvm-roc-backend )"
 
-DEPEND=">=dev-libs/rocm-comgr-${PV}
-	>=sys-devel/hcc-${PV}
+DEPEND=">=dev-libs/rocm-comgr-3.9.0
+	>=sys-devel/hcc-3.3.0
 	hipify? ( >=sys-devel/clang-8.0.0 )
 	llvm-roc-backend? ( =dev-libs/rocm-device-libs-${PV}* )
 	llvm-roc-backend? ( =sys-devel/llvm-roc-${PV}* )"
@@ -35,7 +35,7 @@ RDEPEND="${DEPEND}"
 CMAKE_BUILD_TYPE=Release
 
 src_prepare() {
-	eapply "${FILESDIR}/DisableTest.patch"
+	#eapply "${FILESDIR}/DisableTest.patch"
 	sed -e "s:#!/usr/bin/python:#!/usr/bin/python2:" -i hip_prof_gen.py || die
 	eapply_user
 	cmake-utils_src_prepare
