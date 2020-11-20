@@ -8,7 +8,7 @@ inherit cmake-utils flag-o-matic check-reqs git-r3
 DESCRIPTION=""
 HOMEPAGE="https://github.com/ROCmSoftwarePlatform/rocFFT"
 #SRC_URI="https://github.com/ROCmSoftwarePlatform/rocFFT/archive/rocm-${PV}.tar.gz -> rocFFT-${PV}.tar.gz"
-EGIT_URI="https://github.com/ROCmSoftwarePlatform/rocFFT"
+EGIT_REPO_URI="https://github.com/ROCmSoftwarePlatform/rocFFT"
 EGIT_BRANCH="master"
 
 LICENSE=""
@@ -71,7 +71,7 @@ src_configure() {
 		AMDGPU_TARGETS+="gfx908;"
 	fi
 
-	export CXX=hipcc
+	export CXX="hipcc --rocm-path=/usr/lib/hip/3.9 --rocm-device-lib-path=/usr/lib/amdgcn/bitcode"
 
 	local mycmakeargs=(
 		-Wno-dev

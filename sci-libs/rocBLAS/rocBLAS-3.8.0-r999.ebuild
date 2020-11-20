@@ -40,7 +40,7 @@ rocBLAS_V="0.1"
 
 src_prepare() {
 	# Changes in Tensile ...
-	sed -e "s:hipFlags = \[\"--genco\", :hipFlags = \[:" -i "${WORKDIR}/Tensile-rocm-${PV}/Tensile/TensileCreateLibrary.py" || die
+	sed -e "s:hipFlags = \[\"--genco\", :hipFlags = \[\"--rocm-device-lib-path=/usr/lib/amdgcn/bitcode\", \"--rocm-path=/usr/lib/hip/3.9\", :" -i "${WORKDIR}/Tensile-rocm-${PV}/Tensile/TensileCreateLibrary.py" || die
 	sed -e "s:locateExe(\"/opt/rocm/llvm/bin\", \"clang-offload-bundler\"):\"/usr/lib/llvm/roc/bin/clang-offload-bundler\":" -i "${WORKDIR}/Tensile-rocm-${PV}/Tensile/Common.py" || die
 
 	# Changes in rocBLAS ...
@@ -79,7 +79,7 @@ src_configure() {
 	strip-flags
 	filter-flags '*march*'
 
-	CXX="hipcc --rocm-path=/usr/lib/hip/3.9"
+	CXX="hipcc --rocm-path=/usr/lib/hip/3.9 --rocm-device-lib-path=/usr/lib/amdgcn/bitcode"
 
 	if use debug; then
 		buildtype="Debug"

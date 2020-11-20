@@ -8,7 +8,7 @@ inherit cmake-utils git-r3
 DESCRIPTION=""
 HOMEPAGE="https://github.com/ROCmSoftwarePlatform/rocThrust"
 #SRC_URI="https://github.com/ROCmSoftwarePlatform/rocThrust/archive/rocm-${PV}.tar.gz -> rocThrust-${PV}.tar.gz"
-EGIT_URI="https://github.com/ROCmSoftwarePlatform/rocThrust"
+EGIT_REPO_URI="https://github.com/ROCmSoftwarePlatform/rocThrust"
 EGIT_BRANCH="master"
 
 LICENSE=""
@@ -39,7 +39,7 @@ src_prepare() {
 }
 
 src_configure() {
-	export CXX=hipcc
+	export CXX="hipcc --rocm-path=/usr/lib/hip/3.9 --rocm-device-lib-path=/usr/lib/amdgcn/bitcode"
 
 	local mycmakeargs=(
 		-DBUILD_TEST=OFF

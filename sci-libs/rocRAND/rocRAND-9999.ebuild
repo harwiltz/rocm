@@ -9,7 +9,7 @@ inherit git-r3
 DESCRIPTION="Generate pseudo-random and quasi-random numbers"
 HOMEPAGE="https://github.com/ROCmSoftwarePlatform/rocRAND"
 #SRC_URI="https://github.com/ROCmSoftwarePlatform/rocRAND/archive/rocm-${PV}.tar.gz -> rocRAND-${PV}.tar.gz"
-EGIT_URI="https://github.com/ROCmSoftwarePlatform/rocRAND"
+EGIT_REPO_URI="https://github.com/ROCmSoftwarePlatform/rocRAND"
 EGIT_BRANCH="master"
 
 LICENSE=""
@@ -51,10 +51,10 @@ src_configure() {
 	filter-flags '*march*'
 
 	# Compiler to use...
-	export CXX=hipcc
+	export CXX="hipcc --rocm-path=/usr/lib/hip/3.9 --rocm-device-lib-path=/usr/lib/amdgcn/bitcode"
 
 	# Let "hipcc" know where the bitcode files are located
-	export DEVICE_LIB_PATH="${EPREFIX}/usr/lib"
+	export DEVICE_LIB_PATH="${EPREFIX}/usr/lib/amdgcn/bitcode"
 
 	local mycmakeargs=(
 		-DBUILD_TEST=OFF

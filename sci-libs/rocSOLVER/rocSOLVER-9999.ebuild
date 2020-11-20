@@ -9,7 +9,7 @@ DESCRIPTION="Implementation of a subset of LAPACK functionality on the ROCm plat
 HOMEPAGE="https://github.com/ROCmSoftwarePlatform/rocSOLVER"
 EGIT_REPO_URI="https://github.com/ROCmSoftwarePlatform/rocSOLVER"
 EGIT_BRANCH="master"
-EGIT_COMMIT="a038b53800c002c1268ea5ed9fb937738acc394d"
+#EGIT_COMMIT="a038b53800c002c1268ea5ed9fb937738acc394d"
 
 LICENSE=""
 KEYWORDS="~amd64"
@@ -24,10 +24,11 @@ DEPEND="${RDEPEND}
 	dev-util/cmake
 	sys-devel/hcc
 	sys-devel/hip
+	sci-libs/rocBLAS
 	>=dev-util/ninja-1.9.0"
 
 src_prepare() {
-	eapply "${FILESDIR}/rocSOLVER-9999-change-rocBLAS-location.patch"
+	#eapply "${FILESDIR}/rocSOLVER-9999-change-rocBLAS-location.patch"
 
 	sed -e "s: PREFIX rocsolver:# PREFIX rocsolver:" -i library/src/CMakeLists.txt
 	sed -e "s:\$<INSTALL_INTERFACE\:include>:\$<INSTALL_INTERFACE\:include/rocsolver>:" -i library/src/CMakeLists.txt
@@ -39,18 +40,18 @@ src_prepare() {
 src_configure() {
 	export CXX=${HCC_HOME}/bin/hcc
 
-        # if the ISA is not set previous to the autodetection,
-        # /opt/rocm/bin/rocm_agent_enumerator is executed,
-        # this leads to a sandbox violation
-        if use gfx803; then
-                CurrentISA="803"
-        fi
-        if use gfx900; then
-                CurrentISA="900"
-        fi
-        if use gfx906; then
-                CurrentISA="906"
-        fi
+	# if the ISA is not set previous to the autodetection,
+	# /opt/rocm/bin/rocm_agent_enumerator is executed,
+	# this leads to a sandbox violation
+	if use gfx803; then
+			CurrentISA="803"
+	fi
+	if use gfx900; then
+			CurrentISA="900"
+	fi
+	if use gfx906; then
+			CurrentISA="906"
+	fi
 
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_PREFIX=/usr/

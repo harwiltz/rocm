@@ -7,7 +7,7 @@ inherit cmake flag-o-matic
 
 if [[ ${PV} == *9999 ]] ; then
 	KEYWORDS="~amd64"
-	EGIT_REPO_URI="https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime/"
+	EGIT_REPO_URI="https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime -> ${P}"
 	inherit git-r3
 else
 	SRC_URI="https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime/archive/roc-${PV}.tar.gz -> ${P}.tar.gz"

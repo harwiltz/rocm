@@ -3,12 +3,12 @@
 
 EAPI=7
 
-inherit cmake-utils
+inherit cmake-utils git-r3
 
 DESCRIPTION=""
 HOMEPAGE="https://github.com/ROCmSoftwarePlatform/hipCUB"
 # SRC_URI="https://github.com/ROCmSoftwarePlatform/hipCUB/archive/rocm-${PV}.tar.gz -> hipCUB-${PV}.tar.gz"
-EGIT_URI="https://github.com/ROCmSoftwarePlatform/hipCUB.git"
+EGIT_REPO_URI="https://github.com/ROCmSoftwarePlatform/hipCUB.git"
 EGIT_BRANCH="master"
 
 LICENSE=""
@@ -40,7 +40,7 @@ src_prepare() {
 }
 
 src_configure() {
-	export CXX=hipcc
+	export CXX="hipcc --rocm-path=/usr/lib/hip/3.9 --rocm-device-lib-path=/usr/lib/amdgcn/bitcode"
 
 	local mycmakeargs=(
 		-DBUILD_TEST=OFF

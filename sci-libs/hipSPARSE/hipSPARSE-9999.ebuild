@@ -40,7 +40,7 @@ src_prepare() {
 
 src_configure() {
 
-	export CXX=hipcc
+	export CXX="hipcc --rocm-path=/usr/lib/hip/3.9 --rocm-device-lib-path=/usr/lib/amdgcn/bitcode"
 
 	local mycmakeargs=(
 		-DHIP_RUNTIME="ROCclr"
