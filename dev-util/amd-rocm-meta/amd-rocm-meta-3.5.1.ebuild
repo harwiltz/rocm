@@ -7,7 +7,7 @@ SLOT="0/$(ver_cut 1-2)"
 
 KEYWORDS="~amd64"
 
-IUSE="debug-tools +hip opencl profiling +science"
+IUSE="debug-tools +hip opencl profiling +science deeplearning"
 
 RDEPEND="
 	>=dev-util/rocminfo-3.5.0
@@ -29,7 +29,9 @@ RDEPEND="
 	debug-tools? ( =dev-util/rocprofiler-$(ver_cut 1-2)* )
 	debug-tools? ( =dev-util/roctracer-$(ver_cut 1-2)* )
 
-	science? ( =dev-libs/rccl-$(ver_cut 1-2)* )
+	deeplearning? ( =dev-libs/rccl-$(ver_cut 1-2)* )
+	deeplearning? ( =dev-util/roctracer-$(ver_cut 1-2)* )
+
 	science? ( =sci-libs/rocPRIM-$(ver_cut 1-2)* )
 	science? ( =sci-libs/rocRAND-$(ver_cut 1-2)* )
 	science? ( =sci-libs/rocFFT-$(ver_cut 1-2)* )
