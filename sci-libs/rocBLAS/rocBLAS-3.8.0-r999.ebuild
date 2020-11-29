@@ -40,7 +40,10 @@ rocBLAS_V="0.1"
 
 src_prepare() {
 	# Changes in Tensile ...
-	sed -e "s:hipFlags = \[\"--genco\", :hipFlags = \[\"--rocm-device-lib-path=/usr/lib/amdgcn/bitcode\", \"--rocm-path=/usr/lib/hip/3.9\", :" -i "${WORKDIR}/Tensile-rocm-${PV}/Tensile/TensileCreateLibrary.py" || die
+	#sed -e "s:hipFlags = \[\"--genco\", :hipFlags = \[\"--rocm-device-lib-path=/usr/lib/amdgcn/bitcode\", \"--rocm-path=/usr/lib/hip/3.9\", :" -i "${WORKDIR}/Tensile-rocm-${PV}/Tensile/TensileCreateLibrary.py" || die
+	for i in "${WORKDIR}/Tensile-rocm-${PV}/Tensile"/*.py; do
+		sed -e "s:hipFlags = \[\"--genco\", :hipFlags = \[\"--rocm-device-lib-path=/usr/lib/amdgcn/bitcode\", \"--rocm-path=/usr/lib/hip/3.9\", :" -i $i || die
+	done
 	sed -e "s:locateExe(\"/opt/rocm/llvm/bin\", \"clang-offload-bundler\"):\"/usr/lib/llvm/roc/bin/clang-offload-bundler\":" -i "${WORKDIR}/Tensile-rocm-${PV}/Tensile/Common.py" || die
 
 	# Changes in rocBLAS ...

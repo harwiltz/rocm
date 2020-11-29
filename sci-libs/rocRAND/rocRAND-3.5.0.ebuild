@@ -23,6 +23,9 @@ S="${WORKDIR}/rocRAND-rocm-${PV}"
 src_prepare() {
 	cd ${S}
 
+	#sed -e "s:include(cmake/VerifyCompiler.cmake):# include(cmake/VerifyCompiler.cmake):" -i CMakeLists.txt
+	sed -e "s:/opt/rocm:/usr:g" -i cmake/VerifyCompiler.cmake
+
 	sed -e "s:LIBRARY DESTINATION hiprand/lib:LIBRARY DESTINATION \${CMAKE_INSTALL_LIBDIR}:" -i library/CMakeLists.txt
 	sed -e "s:DESTINATION hiprand/include:DESTINATION include/hiprand:" -i library/CMakeLists.txt
 	sed -e "s:DESTINATION hiprand/lib/cmake/hiprand:DESTINATION \${CMAKE_INSTALL_LIBDIR}/cmake/hiprand:" -i library/CMakeLists.txt
@@ -43,18 +46,27 @@ src_prepare() {
 }
 
 src_configure() {
+	addread /dev/kfd
+	addpredict /dev/kfd
+
 	# Is this needed anymore?
 	strip-flags
 	filter-flags '*march*'
 
 	# Compiler to use...
 	export CXX=hipcc
+	export HIP_ROOT=/usr/lib/hip/3.5
+	export HIP_CLANG_INCLUDE_PATH=/usr/lib/llvm/roc/include
 
 	# Let "hipcc" know where the bitcode files are located
 	export DEVICE_LIB_PATH="${EPREFIX}/usr/lib64"
 
+	export AMDGPU_TARGETS=gfx803
+
 	local mycmakeargs=(
 		-DBUILD_TEST=OFF
+		-DAMDGPU_TARGETS=gfx803
+		-DHIP_CLANG_INCLUDE_PATH="$HIP_CLANG_INCLUDE_PATH"
 	)
 
 	cmake-utils_src_configure

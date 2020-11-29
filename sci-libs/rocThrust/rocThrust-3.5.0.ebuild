@@ -16,7 +16,7 @@ SLOT="0"
 IUSE=""
 
 RDEPEND=">=sys-devel/hip-${PV}
-	 =sci-libs/rocPRIM-${PV}*"
+	=sci-libs/rocPRIM-$(ver_cut 1-2)*"
 DEPEND="${RDEPEND}
 	dev-util/cmake"
 
@@ -40,7 +40,10 @@ src_prepare() {
 }
 
 src_configure() {
+	addread /dev/kfd
+	addpredict /dev/kfd
 	export CXX=hipcc
+	export DEVICE_LIB_PATH=${EPREFIX}/usr/lib64
 
 	local mycmakeargs=(
 		-DHIP_PLATFORM=hcc

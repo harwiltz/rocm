@@ -48,8 +48,13 @@ src_prepare() {
 }
 
 src_configure() {
+	addread /dev/kfd
+	addpredict /dev/kfd
+
 	strip-flags
 	filter-flags '*march*'
+
+	export DEVICE_LIB_PATH=/usr/lib64
 
 	# Tested in ROCm 3.3:
 	# if the ISA is not set previous to the autodetection,

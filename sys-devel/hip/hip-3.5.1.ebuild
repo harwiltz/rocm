@@ -24,10 +24,12 @@ DEPEND=">=dev-libs/rocclr-$(ver_cut 1-2)
 	hipify? ( >=sys-devel/clang-10.0.0 )"
 RDEPEND="${DEPEND}"
 
+#"${FILESDIR}/${PN}-3.5.1-config-cmake-in.patch"
 PATCHES=(
 	"${FILESDIR}/${PN}-3.5.0-DisableTest.patch"
-	"${FILESDIR}/${PN}-3.5.1-config-cmake-in.patch"
+	"${FILESDIR}/${PN}-3.5.1-remove-ROCclr-properties.patch"
 	"${FILESDIR}/${PN}-3.5.1-hip_vector_types.patch"
+	"${FILESDIR}/${PN}-3.5.1-cmake-mkdir-missing-hcc-detail.patch"
 	"${FILESDIR}/${PN}-3.5.1-detect_offload-arch_for_clang-roc.patch"
 )
 
@@ -35,6 +37,7 @@ PATCHES=(
 S="${WORKDIR}/HIP-rocm-${PV}"
 
 src_prepare() {
+	eapply "${FILESDIR}/HIP-2.7.0-ROCM_PATH-LIB_PATH.patch"
 	# "hcc" is deprecated and not installed, new platform is "rocclr"
 	# sed -e "s:\$HIP_PLATFORM eq \"hcc\" and \$HIP_COMPILER eq \"clang\":\$HIP_PLATFORM eq \"rocclr\" and \$HIP_COMPILER eq \"clang\":" -i "${S}/bin/hipcc"
 
@@ -42,6 +45,8 @@ src_prepare() {
 	# which results in a "stdlib.h" not found while compiling "rocALUTION"
 	# currently comment out, remove in future?
 	sed -e "s:    \$HIPCXXFLAGS .= \" -isystem \$HSA_PATH/include\";:#    \$HIPCXXFLAGS .= \" -isystem \$HSA_PATH/include\";:" -i bin/hipcc || die
+
+	sed -s 's:set(AMDGPU_TARGETS ":set(AMDGPU_TARGETS "gfx803;:' -i hip-config.cmake.in
 
 	#prefixing hipcc and its utils
 	grep -rl --exclude-dir=build/ "/usr" ${S} | xargs sed -e "s:/usr:${EPREFIX}/usr:g" -i || die
@@ -76,6 +81,8 @@ src_configure() {
 		-DUSE_PROF_API=$(usex profile 1 0)
 		-DROCclr_DIR=${EPREFIX}/usr/include/rocclr
 		-DLIBROCclr_STATIC_DIR=${EPREFIX}/usr/lib64/cmake/rocclr
+		-DHIP_PLATFORM=hcc
+		-DUSE_PROF_API=1
 	)
 
 	cmake-utils_src_configure

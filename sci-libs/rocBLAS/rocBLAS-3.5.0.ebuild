@@ -33,8 +33,16 @@ S="${WORKDIR}/rocBLAS-rocm-${PV}"
 
 rocBLAS_V="0.1"
 
+#PATCHES=(
+#	"${FILESDIR}/Tensile-${PV}-fix-stringref-compilation-error.patch"
+#)
+
 src_prepare() {
 	cd "${WORKDIR}/Tensile-rocm-${PV}"
+
+	ls Tensile/Source/lib/include/Tensile/llvm
+
+	eapply "${FILESDIR}/Tensile-${PV}-fix-stringref-compilation-error.patch"
 
 #	eapply "${FILESDIR}/Tensile-2.8-add_HIP_include_path.patch"
 
@@ -72,6 +80,8 @@ src_configure() {
 	filter-flags '*march*'
 
 	CXX=hipcc
+	export DEVICE_LIB_PATH=/usr/lib64
+	export HIP_CLANG_INCLUDE_PATH=/usr/lib/llvm/roc/include
 
 	if use debug; then
 		buildtype="Debug"
@@ -105,6 +115,7 @@ src_configure() {
 		-DBUILD_CLIENTS_TESTS=OFF
 		-DBUILD_CLIENTS_BENCHMARKS=OFF
 		-DBUILD_TESTING=OFF
+		-DHIP_CLANG_INCLUDE_PATH="$HIP_CLANG_INCLUDE_PATH"
 	)
 
 	# if BUILD_TESTING is set to "ON", building fails

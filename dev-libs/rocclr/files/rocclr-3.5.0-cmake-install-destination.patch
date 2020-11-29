@@ -1,0 +1,12 @@
+--- CMakeLists.txt.old	2020-11-27 18:28:45.608977180 -0500
++++ CMakeLists.txt	2020-11-27 18:29:42.504974732 -0500
+@@ -202,7 +202,8 @@
+ #endif()
+ endif()
+ 
+-install( TARGETS amdrocclr_static ARCHIVE DESTINATION lib LIBRARY DESTINATION lib COMPONENT applications)
++install( TARGETS amdrocclr_static ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT applications)
+ file(GLOB headerfiles "${CMAKE_CURRENT_SOURCE_DIR}/*.h*")
+ install (
+     FILES ${headerfiles}

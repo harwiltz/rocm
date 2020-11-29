@@ -1,0 +1,11 @@
+--- src/CMakeLists.txt	2020-11-27 15:36:32.402421824 -0500
++++ src/CMakeLists.txt	2020-11-27 15:38:09.629417640 -0500
+@@ -166,6 +166,8 @@
+ ## Add the install directives for the runtime library.
+ install ( TARGETS ${HSAKMT_TARGET} DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+ install ( FILES ${SOURCE_DIR}/LICENSE.md DESTINATION ${CMAKE_INSTALL_DOCDIR} )
++install ( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include DESTINATION
++  /usr FILES_MATCHING PATTERN "*.h" )
+ 
+ ## Add the packaging directives for the runtime library.
+ set ( CPACK_PACKAGE_NAME ${HSAKMT_PACKAGE} )

@@ -15,12 +15,12 @@ LICENSE=""
 KEYWORDS="~amd64"
 SLOT="0"
 
-IUSE="debug gfx803 gfx900 gfx906 gfx908 +tensile tensile_asm_ci"
+IUSE="debug +gfx803 gfx900 gfx906 gfx908 +tensile +tensile_asm_ci"
 # tensile_host
 
 REQUIRED_USE="|| ( gfx803 gfx900 gfx906 gfx908 )"
 
-RDEPEND="=sys-devel/hip-$(ver_cut 1-2)*"
+RDEPEND=">=sys-devel/hip-3.8.0"
 DEPEND="${RDEPEND}
 	dev-util/cmake
 	dev-util/rocm-cmake
@@ -38,6 +38,8 @@ S="${WORKDIR}/rocBLAS-rocm-${PV}"
 
 rocBLAS_V="0.1"
 
+HIPFLAGS="--rocm-path=/usr/lib/hip/3.9 --rocm-device-lib-path=/usr/lib/amdgcn/bitcode"
+
 #src_unpack() {
 #	unpack ${A}
 #
@@ -49,7 +51,7 @@ rocBLAS_V="0.1"
 
 src_prepare() {
 	# Changes in Tensile ...
-	sed -e "s:hipFlags = \[\"--genco\", :hipFlags = \[:" -i "${WORKDIR}/Tensile-rocm-${PV}/Tensile/TensileCreateLibrary.py" || die
+	sed -e "s:hipFlags = \[\"--genco\", :hipFlags = \[\"--rocm-path=/usr/lib/hip/3.9\", \"--rocm-device-lib-path=/usr/lib/amdgcn/bitcode\", :" -i "${WORKDIR}/Tensile-rocm-${PV}/Tensile/TensileCreateLibrary.py" || die
 	sed -e "s:locateExe(\"/opt/rocm/llvm/bin\", \"clang-offload-bundler\"):\"/usr/lib/llvm/roc/bin/clang-offload-bundler\":" -i "${WORKDIR}/Tensile-rocm-${PV}/Tensile/Common.py" || die
 
 	# Changes in rocBLAS ...
@@ -85,7 +87,7 @@ src_configure() {
 	strip-flags
 	filter-flags '*march*'
 
-	CXX=hipcc
+	CXX="hipcc $HIPFLAGS"
 
 	if use debug; then
 		buildtype="Debug"

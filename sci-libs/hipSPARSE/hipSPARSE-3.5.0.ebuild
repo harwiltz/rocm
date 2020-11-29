@@ -16,8 +16,8 @@ SLOT="0"
 IUSE=""
 
 RDEPEND=">dev-util/rocminfo-$(ver_cut 1-2)
-         =sys-devel/hip-$(ver_cut 1-2)*
-         =sci-libs/rocSPARSE-${PV}*"
+	 =sys-devel/hip-$(ver_cut 1-2)*
+	 =sci-libs/rocSPARSE-${PV}*"
 DEPEND="${RDPEND}
 	dev-util/cmake"
 
@@ -30,13 +30,21 @@ src_prepare() {
 	sed -e "s:<INSTALL_INTERFACE\:include:<INSTALL_INTERFACE\:include/hipsparse/:" -i ${S}/library/CMakeLists.txt || die
 	sed -e "s:rocm_install_symlink_subdir(hipsparse):#rocm_install_symlink_subdir(hipsparse):" -i ${S}/library/CMakeLists.txt || die
 
+	sed -e 's:find_package(rocsparse REQUIRED):#find_package(rocsparse REQUIRED CONFIG PATHS ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/cmake/rocsparse):' -i cmake/Dependencies.cmake
+	sed -e 's:find_package(HIP REQUIRED):#find_package(HIP REQUIRED CONFIG PATHS ${HIP_PATH}/cmake):' -i cmake/Dependencies.cmake
+
+	sed -e "s:include <rocsparse.h>:include <rocsparse/rocsparse.h>:" -i library/src/hcc_detail/hipsparse.cpp
+
 	eapply_user
 	cmake-utils_src_prepare
 }
 
 src_configure() {
+	addread /dev/kfd
+	addpredict /dev/kfd
 
 	export CXX=hipcc
+	export DEVICE_LIB_PATH=/usr/lib64
 
 	local mycmakeargs=(
 		-DHIP_PLATFORM="rocclr"

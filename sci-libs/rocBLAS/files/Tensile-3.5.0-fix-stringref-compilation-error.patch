@@ -1,0 +1,11 @@
+--- Tensile-rocm-3.5.0/Tensile/Source/lib/include/Tensile/llvm/YAML.hpp	2020-11-29 11:53:37.281753853 -0500
++++ Tensile-rocm-3.5.0/Tensile/Source/lib/include/Tensile/llvm/YAML.hpp	2020-11-29 11:53:51.749753230 -0500
+@@ -246,7 +246,7 @@
+ 
+             static void inputOne(IO & io, StringRef key, Hide<T> & value)
+             {
+-                Impl::inputOne(io, key, *value);
++                Impl::inputOne(io, key.str(), *value);
+             }
+ 
+             static void output(IO & io, Hide<T> & value)

@@ -34,24 +34,28 @@ src_prepare() {
 }
 
 src_configure() {
-	CXX=hipcc
+	addread /dev/kfd
+	addpredict /dev/kfd
 
-        # if the ISA is not set previous to the autodetection,
-        # /opt/rocm/bin/rocm_agent_enumerator is executed,
-        # this leads to a sandbox violation
+	CXX=hipcc
+	export DEVICE_LIB_PATH=/usr/lib64
+
+	# if the ISA is not set previous to the autodetection,
+	# /opt/rocm/bin/rocm_agent_enumerator is executed,
+	# this leads to a sandbox violation
 	AMDGPU_TARGETS=""
-        if use gfx803; then
+	if use gfx803; then
 		AMDGPU_TARGETS+="gfx803;"
-        fi
-        if use gfx900; then
+	fi
+	if use gfx900; then
 		AMDGPU_TARGETS+="gfx900;"
-        fi
-        if use gfx906; then
+	fi
+	if use gfx906; then
 		AMDGPU_TARGETS+="gfx906;"
-        fi
-        if use gfx908; then
+	fi
+	if use gfx908; then
 		AMDGPU_TARGETS+="gfx908;"
-        fi
+	fi
 
 	local mycmakeargs=(
 		-Wno-dev
@@ -60,7 +64,6 @@ src_configure() {
 		-DBUILD_CLIENTS_SAMPLES=NO
 		-DBUILD_CLIENTS_TESTS=NO
 		-DBUILD_CLIENTS_BENCHMARKS=NO
-		-DAMDGPU_TARGETS=${AMDGPU_TARGETS}
 	)
 
 	cmake-utils_src_configure

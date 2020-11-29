@@ -1,0 +1,32 @@
+--- src/CMakeLists.txt	2020-11-28 13:12:23.264603720 -0500
++++ src/CMakeLists.txt	2020-11-28 17:18:54.212690428 -0500
+@@ -24,6 +24,8 @@
+ # The ROCm platform requires at least Ubuntu 16.04 or Fedora 24, which have cmake 3.5
+ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+ 
++message(STATUS "[DEBUG] CMAKE_INSTALL_LIBDIR is ${CMAKE_INSTALL_LIBDIR}")
++
+ # Consider removing this in the future
+ # This should appear before the project command, because it does not use FORCE
+ if(WIN32)
+@@ -51,9 +53,11 @@
+ project(rocsparse LANGUAGES CXX)
+ 
+ # Determine if CXX Compiler is hcc or hip-clang
++message(STATUS "[DEBUG] CMAKE_CXX_COMPILER is ${CMAKE_CXX_COMPILER}")
+ execute_process(COMMAND ${CMAKE_CXX_COMPILER} "--version" OUTPUT_VARIABLE CXX_OUTPUT
+                 OUTPUT_STRIP_TRAILING_WHITESPACE
+                 ERROR_STRIP_TRAILING_WHITESPACE)
++message(STATUS "[DEBUG] CXX_OUTPUT is ${CXX_OUTPUT}")
+ string(REGEX MATCH "[A-Za-z]* ?clang version" TMP_CXX_VERSION ${CXX_OUTPUT})
+ string(REGEX MATCH "[A-Za-z]+" CXX_VERSION_STRING ${TMP_CXX_VERSION})
+ 
+@@ -67,7 +71,7 @@
+ endif()
+ 
+ # Force library install path to lib (CentOS 7 defaults to lib64)
+-set(CMAKE_INSTALL_LIBDIR "lib" CACHE INTERNAL "Installation directory for libraries" FORCE)
++# set(CMAKE_INSTALL_LIBDIR "lib" CACHE INTERNAL "Installation directory for libraries" FORCE)
+ 
+ # Build flags
+ set(CMAKE_CXX_STANDARD 14)

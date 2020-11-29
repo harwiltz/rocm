@@ -1,0 +1,26 @@
+--- src/amdocl/CMakeLists.txt	2020-11-29 14:20:55.597373535 -0500
++++ src/amdocl/CMakeLists.txt	2020-11-29 14:48:27.768302441 -0500
+@@ -26,17 +26,18 @@
+ # current build scripts. Instead they should install, or use
+ # CMAKE_PREFIX_PATH
+ #Uncomment once fixed
+-#find_package(ROCclr CONFIG
+-#  PATHS
+-#  ${ROCclr_DIR}
+-#  ${LIBROCclr_STATIC_DIR})
++message(STATUS "[amdocl] ROCclr_DIR is ${ROCclr_DIR}")
++# find_package(ROCclr CONFIG
++#   PATHS
++#   ${ROCclr_DIR}
++#   ${LIBROCclr_STATIC_DIR})
+ 
+ if(NOT ROCclr_FOUND)
+   # FIXME: Make ROCclr find required and remove this.
+   #
+   # This is to break the dependency on patch to start producing find
+   # module.
+-  include(${LIBROCclr_STATIC_DIR}/amdrocclr_staticTargets.cmake)
++  #include(${LIBROCclr_STATIC_DIR}/amdrocclr_staticTargets.cmake)
+ endif()
+ 
+ include_directories(${CMAKE_SOURCE_DIR})

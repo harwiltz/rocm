@@ -27,36 +27,47 @@ rocSPARSE_V="0.1"
 
 BUILD_DIR="${S}/build/release"
 
+PATCHES=(
+	"${FILESDIR}/${P}-skip-language-check.patch"
+)
+
 src_prepare() {
-        cd ${S}
+	cd ${S}
 
-        sed -e "s: PREFIX rocsparse:# PREFIX rocsparse:" -i library/CMakeLists.txt
+	sed -e "s: PREFIX rocsparse:# PREFIX rocsparse:" -i library/CMakeLists.txt
 	sed -e "s:<INSTALL_INTERFACE\:include:<INSTALL_INTERFACE\:include/rocsparse/:" -i library/CMakeLists.txt
-        sed -e "s:rocm_install_symlink_subdir(rocsparse):#rocm_install_symlink_subdir(rocsparse):" -i library/CMakeLists.txt
+	sed -e "s:rocm_install_symlink_subdir(rocsparse):#rocm_install_symlink_subdir(rocsparse):" -i library/CMakeLists.txt
 
-        eapply_user
+	sed -e 's:find_package(rocprim REQUIRED):find_package(rocprim REQUIRED CONFIG PATHS ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/cmake/rocprim):' -i cmake/Dependencies.cmake
+
+	eapply_user
 	cmake-utils_src_prepare
 }
 
 src_configure() {
-        # if the ISA is not set previous to the autodetection,
-        # /opt/rocm/bin/rocm_agent_enumerator is executed,
-        # this leads to a sandbox violation
+	# hipcc needs rw access to /dev/kfd
+	addread /dev/kfd
+	addpredict /dev/kfd
+	# if the ISA is not set previous to the autodetection,
+	# /opt/rocm/bin/rocm_agent_enumerator is executed,
+	# this leads to a sandbox violation
 	CurrentISA=""
-        if use gfx803; then
-                CurrentISA+="gfx803;"
-        fi
-        if use gfx900; then
-                CurrentISA+="gfx900;"
-        fi
-        if use gfx906; then
-                CurrentISA+="gfx906;"
-        fi
-        if use gfx906; then
-                CurrentISA+="gfx908;"
-        fi
+	if use gfx803; then
+			CurrentISA+="gfx803;"
+	fi
+	if use gfx900; then
+			CurrentISA+="gfx900;"
+	fi
+	if use gfx906; then
+			CurrentISA+="gfx906;"
+	fi
+	if use gfx906; then
+			CurrentISA+="gfx908;"
+	fi
 
 	export CXX=hipcc
+	export CXXFLAGS+=" --hip-device-lib-path=/usr/lib64 "
+	export LIBDIR_default="lib64"
 
 	local mycmakeargs=(
 		-DBUILD_CLIENTS_SAMPLES=OFF

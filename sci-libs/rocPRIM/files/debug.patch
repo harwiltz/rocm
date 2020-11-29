@@ -1,0 +1,39 @@
+--- src/CMakeLists.txt	2020-11-28 11:42:33.201892823 -0500
++++ src/CMakeLists.txt	2020-11-28 12:43:01.239698229 -0500
+@@ -23,25 +23,36 @@
+ cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
+ 
+ # Install prefix
++message(STATUS "[DEBUG] Installing path prefix...")
+ set(CMAKE_INSTALL_PREFIX "/opt/rocm" CACHE PATH "Install path prefix, prepended onto install directories")
++message(STATUS "[DEBUG] Done")
+ 
+ # rocPRIM project
++message(STATUS "[DEBUG] Loading rocPRIM project...")
+ project(rocprim LANGUAGES CXX)
++message(STATUS "[DEBUG] Done")
+ 
+ # CMake modules
++message(STATUS "[DEBUG] Candidate cmake: ${HIP_PATH}/cmake")
++message(STATUS "[DEBUG] Configuring CMake modules...")
+ list(APPEND CMAKE_MODULE_PATH
+   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+   ${HIP_PATH}/cmake /opt/rocm/hip/cmake # FindHIP.cmake
+ )
++message(STATUS "[DEBUG] Done")
+ 
+ # Set a default build type if none was specified
++message(STATUS "[DEBUG] Setting build type...")
+ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+   message(STATUS "Setting build type to 'Release' as none was specified.")
+   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
+   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+ endif()
++message(STATUS "[DEBUG] Done")
+ 
++message (STATUS "[DEBUG] Adding paths to linker search...")
+ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE CACHE BOOL "Add paths to linker search and installed rpath")
++message (STATUS "[DEBUG] Done")
+ 
+ # Verify that hcc compiler is used on ROCM platform
+ include(cmake/VerifyCompiler.cmake)

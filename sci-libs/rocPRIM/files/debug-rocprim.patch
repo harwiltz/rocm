@@ -1,0 +1,73 @@
+--- src/rocprim/CMakeLists.txt	2020-11-28 12:44:42.650692789 -0500
++++ src/rocprim/CMakeLists.txt	2020-11-28 12:49:06.618678631 -0500
+@@ -22,14 +22,18 @@
+ 
+ # rocPRIM header-only library
+ 
++message(STATUS "[rocprim] Starting CMake for rocprim")
+ # Configure a header file to pass the rocPRIM version
++message(STATUS "[rocprim] Configuring headers...")
+ configure_file(
+   "${CMAKE_CURRENT_SOURCE_DIR}/include/rocprim/rocprim_version.hpp.in"
+   "${CMAKE_CURRENT_BINARY_DIR}/include/rocprim/rocprim_version.hpp"
+   @ONLY
+ )
++message(STATUS "[rocprim] Done")
+ 
+ # Only header target, does not include dependencies
++message(STATUS "[rocprim] Adding header target...")
+ add_library(rocprim INTERFACE)
+ target_include_directories(rocprim
+   INTERFACE
+@@ -38,24 +42,31 @@
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+     $<INSTALL_INTERFACE:rocprim/include/>
+ )
++message(STATUS "[rocprim] DONE")
+ 
+ # This target links against HIP library
++message(STATUS "[rocprim] Linking against HIP library...")
+ add_library(rocprim_hip INTERFACE)
+ target_link_libraries(rocprim_hip INTERFACE rocprim hip::device)
++message(STATUS "[rocprim] Done")
+ 
+ 
+ # Installation
+ 
++message(STATUS "[rocprim] STARTING INSTALL")
+ include(GNUInstallDirs)
+ set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+ 
+ # We need to install headers manually as rocm_install_targets
+ # does not support header-only libraries (INTERFACE targets)
++message(STATUS "[rocprim] Installing headers...")
+ rocm_install_targets(
+   TARGETS rocprim rocprim_hip
+   PREFIX rocprim
+ )
++message(STATUS "[rocprim] Done")
+ 
++message(STATUS "[rocprim] Installing rest...")
+ install(
+   DIRECTORY
+     "include/"
+@@ -66,13 +77,19 @@
+   PATTERN "*.hpp"
+   PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
+ )
++message(STATUS "[rocprim] Done")
+ 
+ # Export targets
++message(STATUS "[rocprim] Exporting targets...")
+ rocm_export_targets(
+   TARGETS roc::rocprim roc::rocprim_hip
+   PREFIX rocprim
+   NAMESPACE roc::
+ )
++message(STATUS "[rocprim] Done")
+ 
+ # Create symlinks
++message(STATUS "[rocprim] Creating symlinks...")
+ rocm_install_symlink_subdir(rocprim)
++message(STATUS "[rocprim] Done")
++message(STATUS "[rocprim] FINISHED rocprim")
