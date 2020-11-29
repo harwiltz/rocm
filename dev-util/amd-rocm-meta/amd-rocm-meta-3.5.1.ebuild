@@ -29,6 +29,7 @@ RDEPEND="
 	debug-tools? ( =dev-util/rocprofiler-$(ver_cut 1-2)* )
 	debug-tools? ( =dev-util/roctracer-$(ver_cut 1-2)* )
 
+	science? ( =dev-libs/rccl-$(ver_cut 1-2)* )
 	science? ( =sci-libs/rocPRIM-$(ver_cut 1-2)* )
 	science? ( =sci-libs/rocRAND-$(ver_cut 1-2)* )
 	science? ( =sci-libs/rocFFT-$(ver_cut 1-2)* )

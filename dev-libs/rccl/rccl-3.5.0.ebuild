@@ -30,6 +30,9 @@ PATCHES=(
 src_configure() {
 #	CMAKE_MAKEFILE_GENERATOR=emake
 
+	addread /dev/kfd
+	addpredict /dev/kfd
+
 	export DEVICE_LIB_PATH="${EPREFIX}/usr/lib64"
 	export CXX=hipcc
 
@@ -43,10 +46,13 @@ src_configure() {
 		CurrentISA="906"
 	fi
 
+	export HIP_CLANG_INCLUDE_PATH="/usr/lib/hip/3.5"
+
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_PREFIX=${EPREFIX}/usr
 		-DCMAKE_CXX_FLAGS="--amdgpu-target=gfx${CurrentISA}"
 		-Wno-dev
+		-DHIP_CLANG_INCLUDE_PATH="$HIP_CLANG_INCLUDE_PATH"
 	)
 
 	cmake-utils_src_configure
