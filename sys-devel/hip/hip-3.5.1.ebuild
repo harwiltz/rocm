@@ -27,10 +27,10 @@ RDEPEND="${DEPEND}"
 #"${FILESDIR}/${PN}-3.5.1-config-cmake-in.patch"
 PATCHES=(
 	"${FILESDIR}/${PN}-3.5.0-DisableTest.patch"
-	"${FILESDIR}/${PN}-3.5.1-remove-ROCclr-properties.patch"
 	"${FILESDIR}/${PN}-3.5.1-hip_vector_types.patch"
 	"${FILESDIR}/${PN}-3.5.1-cmake-mkdir-missing-hcc-detail.patch"
 	"${FILESDIR}/${PN}-3.5.1-detect_offload-arch_for_clang-roc.patch"
+	"${FILESDIR}/${PN}-3.5.1-add-rocclr-platform-to-hipconfig.patch"
 )
 
 
@@ -80,8 +80,8 @@ src_configure() {
 		-DHSA_PATH="${EPREFIX}/usr"
 		-DUSE_PROF_API=$(usex profile 1 0)
 		-DROCclr_DIR=${EPREFIX}/usr/include/rocclr
-		-DLIBROCclr_STATIC_DIR=${EPREFIX}/usr/lib64/cmake/rocclr
-		-DHIP_PLATFORM=hcc
+		-DLIBROCclr_STATIC_DIR=${EPREFIX}/usr/lib64
+		-DHIP_PLATFORM=rocclr
 		-DUSE_PROF_API=1
 	)
 
@@ -91,7 +91,7 @@ src_configure() {
 src_install() {
 	echo "HSA_PATH=${EPREFIX}/usr" > 99hip || die
 	echo "ROCM_PATH=${EPREFIX}/usr" >> 99hip || die
-	echo "HIP_PLATFORM=hcc" >> 99hip || die
+	echo "HIP_PLATFORM=rocclr" >> 99hip || die
 	echo "HIP_RUNTIME=ROCclr" >> 99hip || die
 	echo "HIP_COMPILER=clang" >> 99hip || die
 	echo "HIP_CLANG_PATH=${EPREFIX}/usr/lib/llvm/roc/bin" >> 99hip || die
