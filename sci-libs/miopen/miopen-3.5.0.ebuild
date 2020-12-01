@@ -33,6 +33,10 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/MIOpen-rocm-${PV}"
 
+PATCHES=(
+	"${FILESDIR}/${PN}-3.5.0-hip-device-libs.patch"
+)
+
 src_prepare() {
 	sed -e "s:set( MIOPEN_INSTALL_DIR miopen):set( MIOPEN_INSTALL_DIR \"\"):" -i CMakeLists.txt
 	sed -e "s:set( DATA_INSTALL_DIR \${MIOPEN_INSTALL_DIR}/\${CMAKE_INSTALL_DATAROOTDIR}/miopen ):set( DATA_INSTALL_DIR \${CMAKE_INSTALL_PREFIX}/\${CMAKE_INSTALL_DATAROOTDIR}/miopen ):" -i CMakeLists.txt
@@ -49,10 +53,14 @@ src_configure() {
 
 	CMAKE_MAKEFILE_GENERATOR=emake
 
+	export DEVICE_LIB_PATH=/usr/lib64
+
 	local mycmakeargs=(
-		-DCMAKE_CXX_FLAGS="-I/${EPREFIX}/usr/lib/llvm/roc/lib/clang/11.0.0" # for cuda cuda_wrappers header
+		-DCMAKE_CXX_FLAGS="-I/${EPREFIX}/usr/lib/llvm/roc/lib/clang/11.0.0 --hip-device-lib-path=/usr/lib64" # for cuda cuda_wrappers header
 		-DCMAKE_INSTALL_PREFIX=${EPREFIX}/usr/
 		-DCMAKE_BUILD_TYPE=Release
+		-DAMD_DEVICE_LIBS_PREFIX=/usr
+		-DHIP_COMPILER_FLAGS="--hip-device-lib-path=/usr/lib64"
 	)
 
 	if use opencl; then

@@ -31,6 +31,7 @@ RDEPEND="
 
 	deeplearning? ( =dev-libs/rccl-$(ver_cut 1-2)* )
 	deeplearning? ( =dev-util/roctracer-$(ver_cut 1-2)* )
+	deeplearning? ( =sci-libs/miopen-$(ver_cut 1-2)* )
 
 	science? ( =sci-libs/rocPRIM-$(ver_cut 1-2)* )
 	science? ( =sci-libs/rocRAND-$(ver_cut 1-2)* )
