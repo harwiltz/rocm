@@ -1,0 +1,15 @@
+diff --git a/cmake/modules/FindROCR.cmake b/cmake/modules/FindROCR.cmake
+index 2b198dc..96097ed 100644
+--- a/cmake/modules/FindROCR.cmake
++++ b/cmake/modules/FindROCR.cmake
+@@ -4,8 +4,8 @@
+ #   - ROCR_FOUND     - ROCR status (found or not found)
+ #   - ROCR_INCLUDES  - Required ROCR include directories
+ #   - ROCR_LIBRARIES - Required ROCR libraries
+-find_path(FIND_ROCR_INCLUDES hsa.h HINTS /opt/rocm/include /opt/rocm/hsa/include PATH_SUFFIXES hsa)
+-find_library(FIND_ROCR_LIBRARIES hsa-runtime64 HINTS /opt/rocm/lib /opt/rocm/hsa/lib)
++find_path(FIND_ROCR_INCLUDES hsa.h HINTS /usr/include /opt/rocm/include /opt/rocm/hsa/include PATH_SUFFIXES hsa)
++find_library(FIND_ROCR_LIBRARIES hsa-runtime64 HINTS /usr/lib64 /opt/rocm/lib /opt/rocm/hsa/lib)
+ 
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(ROCR DEFAULT_MSG

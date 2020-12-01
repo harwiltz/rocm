@@ -37,7 +37,6 @@ BDEPEND=">=dev-util/rocm-cmake-${PV}"
 PATCHES=(
 	"${FILESDIR}/${PN}-3.5.0-do-not-install-libopencl.patch"
 	"${FILESDIR}/${PN}-3.7.0-change-install-location.patch"
-	"${FILESDIR}/${P}-find-rocclr.patch"
 )
 
 src_prepare() {
@@ -59,15 +58,16 @@ src_configure() {
 	local mycmakeargs=(
 		-DUSE_COMGR_LIBRARY=yes
 		-DROCclr_DIR="$ROCclr_DIR"
-		-DLIBROCclr_STATIC_DIR="${EPREFIX}/usr/lib/rocclr"
+		-DLIBROCclr_STATIC_DIR="${EPREFIX}/usr/lib64"
 	)
 	cmake_src_configure
 }
 
 src_install() {
-	cd "${BUILD_DIR}" || die
+	cd "${WORK_DIR}" || die
 	insinto /etc/OpenCL/vendors
-	doins amdocl64.icd
+	doins config/amdocl64.icd
+	cd "${BUILD_DIR}" || die
 	insinto /usr/lib64
 	doins lib/libamdocl64.so
 }

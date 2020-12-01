@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 65c3c18..f9f0f8e 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,6 +49,8 @@ endif()
+ 
+ find_package(ROCT REQUIRED)
+ find_package(ROCR REQUIRED)
++message(STATUS "ROCR_INCLUDES: ${ROCR_INCLUDES}")
++message(STATUS "ROCR_LIBRARIES: ${ROCR_LIBRARIES}")
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ find_package(Threads REQUIRED)
+ 
+diff --git a/cmake/modules/FindROCR.cmake b/cmake/modules/FindROCR.cmake
+index 2b198dc..96097ed 100644
+--- a/cmake/modules/FindROCR.cmake
++++ b/cmake/modules/FindROCR.cmake
+@@ -4,8 +4,8 @@
+ #   - ROCR_FOUND     - ROCR status (found or not found)
+ #   - ROCR_INCLUDES  - Required ROCR include directories
+ #   - ROCR_LIBRARIES - Required ROCR libraries
+-find_path(FIND_ROCR_INCLUDES hsa.h HINTS /opt/rocm/include /opt/rocm/hsa/include PATH_SUFFIXES hsa)
+-find_library(FIND_ROCR_LIBRARIES hsa-runtime64 HINTS /opt/rocm/lib /opt/rocm/hsa/lib)
++find_path(FIND_ROCR_INCLUDES hsa.h HINTS /usr/include /opt/rocm/include /opt/rocm/hsa/include PATH_SUFFIXES hsa)
++find_library(FIND_ROCR_LIBRARIES hsa-runtime64 HINTS /usr/lib64 /opt/rocm/lib /opt/rocm/hsa/lib)
+ 
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(ROCR DEFAULT_MSG

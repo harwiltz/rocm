@@ -1,0 +1,41 @@
+--- src/bin/hipconfig	2020-11-30 11:18:19.284908117 -0500
++++ src/bin/hipconfig	2020-11-30 11:27:16.719884991 -0500
+@@ -8,7 +8,7 @@
+ use Getopt::Long;
+ use Cwd;
+ 
+-# Return name of HIP compiler - either 'nvcc' or 'hcc'
++# Return name of HIP compiler - either 'nvcc' or 'hcc' or 'rocclr'
+ #
+ use Getopt::Long;
+ use File::Basename;
+@@ -35,7 +35,7 @@
+     print "  --rocmpath,  -R    : print ROCM_PATH (use env var if set, else determine from hip path or /opt/rocm)\n";
+     print "  --cpp_config, -C   : print C++ compiler options\n";
+     print "  --compiler, -c     : print compiler (hcc or clang or nvcc)\n";
+-    print "  --platform, -P     : print platform (hcc or nvcc)\n";
++    print "  --platform, -P     : print platform (hcc or nvcc or rocclr)\n";
+     print "  --runtime, -r      : print runtime (HCC or ROCclr)\n";
+     print "  --hipclangpath, -l : print HIP_CLANG_PATH\n";
+     print "  --full, -f         : print full config\n";
+@@ -116,15 +116,13 @@
+ }
+ 
+ if (not defined $HIP_PLATFORM) {
+-    if (can_run("$HCC_HOME/bin/hcc") or can_run("hcc")) {
+-        $HIP_PLATFORM = "hcc";
+-    } elsif (can_run("$HIP_CLANG_PATH/clang++") or can_run("clang++")) {
+-        $HIP_PLATFORM = "hcc";
+-    } elsif (can_run("$CUDA_PATH/bin/nvcc") or can_run("nvcc")) {
++    # If HIP_PLATFORM should be rocclr, HIP only finds out from hipconfig
++    # So, make rocclr the default
++    if (can_run("$CUDA_PATH/bin/nvcc") or can_run("nvcc")) {
+         $HIP_PLATFORM = "nvcc";
+     } else {
+-        # Default to hcc for now
+-        $HIP_PLATFORM = "hcc";
++        # Default to rocclr
++        $HIP_PLATFORM = "rocclr";
+     }
+ }
+ 

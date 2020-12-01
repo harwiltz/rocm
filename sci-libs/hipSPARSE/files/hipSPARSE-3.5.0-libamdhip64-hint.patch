@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 25633cd..b780714 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -75,7 +75,7 @@ set(hipsparse_SOVERSION 0.1)
+ find_library(
+   LIBAMDHIP64_LIBRARY
+   NAMES libamdhip64.so
+-  HINTS "${CMAKE_PREFIX_PATH}/lib" )
++  HINTS ${LIBAMDHIP64_DIR} "${CMAKE_PREFIX_PATH}/lib" )
+ message("amdhip64: ${LIBAMDHIP64_LIBRARY}")
+ 
+ # hipSPARSE library

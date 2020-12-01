@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 97128cf..7dbed55 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -79,7 +79,7 @@ find_package( HIP REQUIRED )
+ find_library(
+   LIBAMDHIP64_LIBRARY
+   NAMES libamdhip64.so
+-  HINTS "${CMAKE_PREFIX_PATH}/lib" )
++  HINTS ${LIBAMDHIP64_DIR} "${CMAKE_PREFIX_PATH}/lib" )
+ message("amdhip64: ${LIBAMDHIP64_LIBRARY}")
+ 
+ # Quietly look for CUDA, but if not found it's not an error

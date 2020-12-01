@@ -21,9 +21,10 @@ DEPEND="${RDEPEND}
 	virtual/opengl
 	>=dev-util/rocm-cmake-${PV}"
 
-#PATCHES=(
-#	"${FILESDIR}/rocclr-3.7.0-cmake-install-destination.patch"
-#)
+PATCHES=(
+	"${FILESDIR}/${PN}-3.5.0-export-amdrocclr_static.patch"
+	"${FILESDIR}/${PN}-3.5.0-link-hsa.patch"
+)
 
 S="${WORKDIR}/ROCclr-roc-${PV}"
 
