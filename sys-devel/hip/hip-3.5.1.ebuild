@@ -28,6 +28,7 @@ RDEPEND="${DEPEND}"
 PATCHES=(
 	"${FILESDIR}/${PN}-3.5.0-DisableTest.patch"
 	"${FILESDIR}/${PN}-3.5.1-hip_vector_types.patch"
+	"${FILESDIR}/${PN}-3.5.1-config-cmake-in.patch"
 	"${FILESDIR}/${PN}-3.5.1-cmake-mkdir-missing-hcc-detail.patch"
 	"${FILESDIR}/${PN}-3.5.1-detect_offload-arch_for_clang-roc.patch"
 	"${FILESDIR}/${PN}-3.5.1-add-rocclr-platform-to-hipconfig.patch"
@@ -39,7 +40,7 @@ S="${WORKDIR}/HIP-rocm-${PV}"
 src_prepare() {
 	eapply "${FILESDIR}/HIP-2.7.0-ROCM_PATH-LIB_PATH.patch"
 	# "hcc" is deprecated and not installed, new platform is "rocclr"
-	# sed -e "s:\$HIP_PLATFORM eq \"hcc\" and \$HIP_COMPILER eq \"clang\":\$HIP_PLATFORM eq \"rocclr\" and \$HIP_COMPILER eq \"clang\":" -i "${S}/bin/hipcc"
+	 sed -e "s:\$HIP_PLATFORM eq \"hcc\" and \$HIP_COMPILER eq \"clang\":\$HIP_PLATFORM eq \"rocclr\" and \$HIP_COMPILER eq \"clang\":" -i "${S}/bin/hipcc"
 
 	# Due to setting HAS_PATH to "/usr", this results in setting "-isystem /usr/include"
 	# which results in a "stdlib.h" not found while compiling "rocALUTION"
@@ -64,6 +65,8 @@ src_configure() {
 	else
 		buildtype="Debug"
 	fi
+
+	export HIP_PLATFORM=rocclr
 
 	# TODO: Currently a GENTOO configuration is build,
 	# this is also used in the cmake configuration files

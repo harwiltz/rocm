@@ -27,9 +27,9 @@ rocSPARSE_V="0.1"
 
 BUILD_DIR="${S}/build/release"
 
-PATCHES=(
-	"${FILESDIR}/${P}-skip-language-check.patch"
-)
+#PATCHES=(
+#	"${FILESDIR}/${P}-skip-language-check.patch"
+#)
 
 src_prepare() {
 	cd ${S}

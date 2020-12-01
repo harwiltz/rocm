@@ -18,7 +18,7 @@ fi
 DESCRIPTION="Radeon Open Compute Runtime"
 HOMEPAGE="https://github.com/RadeonOpenCompute/ROCR-Runtime"
 PATCHES=(
-	"${FILESDIR}/rocr-runtime-3.5.0-fix-libdir.patch"
+	"${FILESDIR}/rocr-runtime-3.5.0-cmake-install-paths.patch"
 )
 
 LICENSE="MIT"
@@ -44,4 +44,11 @@ src_prepare() {
 	#sed -e "s:/opt/rocm/amdgcn/bitcode:/usr/lib:" -i image/blit_src/CMakeLists.txt || die
 
 	cmake_src_prepare
+}
+
+src_configure() {
+	local mycmakeargs=(
+		-DCMAKE_INSTALL_INCLUDEDIR="include"
+	)
+	cmake_src_configure
 }

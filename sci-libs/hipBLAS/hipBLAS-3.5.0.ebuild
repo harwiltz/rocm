@@ -23,6 +23,10 @@ DEPEND="${RDPEND}
 
 S="${WORKDIR}/hipBLAS-rocm-${PV}"
 
+PATCHES=(
+	"${FILESDIR}/${PN}-3.5.0-libamdhip64-hint.patch"
+)
+
 src_prepare() {
 	sed -e "s:<INSTALL_INTERFACE\:include:<INSTALL_INTERFACE\:include/hipblas/:" -i ${S}/library/src/CMakeLists.txt || die
 	sed -e "s: PREFIX hipblas:# PREFIX hipblas:" -i ${S}/library/src/CMakeLists.txt || die
@@ -34,12 +38,18 @@ src_prepare() {
 }
 
 src_configure() {
+	addread /dev/kfd
+	addpredict /dev/kfd
+
 	export HCC_HOME=/usr/lib/hcc/3.3
 	export hcc_DIR=${HCC_HOME}/lib/cmake/
-	export CXX=${HCC_HOME}/bin/hcc
+	export CXX=/usr/lib/hip/3.5/bin/hipcc
+
+	export DEVICE_LIB_PATH=/usr/lib64
 
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_PREFIX=/usr
+		-DLIBAMDHIP64_LIBRARY=/usr/lib/hip/3.5/lib
 	)
 
 	cmake-utils_src_configure
