@@ -26,13 +26,13 @@ src_prepare() {
 	eapply "${FILESDIR}/master-disable2ndfindhcc.patch"
 	eapply "${FILESDIR}/rocThrust-3.5.0-disable-rocPRIM-download.patch"
 
-	# sed -e "s:HIP_PLATFORM STREQUAL \"hcc\":HIP_PLATFORM STREQUAL \"rocclr\":" -i ${S}/cmake/VerifyCompiler.cmake
+	sed -e "s:HIP_PLATFORM STREQUAL \"hcc\":HIP_PLATFORM STREQUAL \"rocclr\":" -i ${S}/cmake/VerifyCompiler.cmake
 
 	sed -e "s: PREFIX rocthrust:# PREFIX rocthrust:" -i ${S}/thrust/CMakeLists.txt
-	sed -e "s:  DESTINATION rocthrust/include/thrust:  DESTINATION include/rocthrust/thrust:" -i ${S}/thrust/CMakeLists.txt
+	sed -e "s:  DESTINATION rocthrust/include/thrust:  DESTINATION include/thrust:" -i ${S}/thrust/CMakeLists.txt
 	sed -e "s:rocm_install_symlink_subdir(rocthrust):#rocm_install_symlink_subdir(rocthrust):" -i ${S}/thrust/CMakeLists.txt
-	sed -e "s:<INSTALL_INTERFACE\:rocthrust/include/:<INSTALL_INTERFACE\:include/rocthrust/:" -i ${S}/thrust/CMakeLists.txt
-	sed -e "s:\${CMAKE_INSTALL_INCLUDEDIR}:&/rocthrust:" -i ${S}/cmake/ROCMExportTargetsHeaderOnly.cmake
+	sed -e "s:<INSTALL_INTERFACE\:rocthrust/include/:<INSTALL_INTERFACE\:include/:" -i ${S}/thrust/CMakeLists.txt
+	#sed -e "s:\${CMAKE_INSTALL_INCLUDEDIR}:&/rocthrust:" -i ${S}/cmake/ROCMExportTargetsHeaderOnly.cmake
 	sed -e "s:\${ROCM_INSTALL_LIBDIR}:\${CMAKE_INSTALL_LIBDIR}:" -i ${S}/cmake/ROCMExportTargetsHeaderOnly.cmake
 
 	eapply_user
@@ -46,7 +46,7 @@ src_configure() {
 	export DEVICE_LIB_PATH=${EPREFIX}/usr/lib64
 
 	local mycmakeargs=(
-		-DHIP_PLATFORM=hcc
+		-DHIP_PLATFORM=rocclr
 		-DBUILD_TEST=OFF
 	)
 

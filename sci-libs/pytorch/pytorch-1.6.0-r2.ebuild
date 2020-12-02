@@ -72,8 +72,9 @@ REQUIRED_USE="
 	cuda? ( !rocm )
 "
 
+#<dev-libs/protobuf-3.12
+#<dev-python/protobuf-python-3.12[${PYTHON_USEDEP}]
 RDEPEND="
-	<dev-libs/protobuf-3.12
 	dev-python/pyyaml[${PYTHON_USEDEP}]
 	atlas? ( sci-libs/atlas )
 	cuda? ( dev-libs/cudnn
@@ -115,7 +116,6 @@ DEPEND="${RDEPEND}
 	dev-python/setuptools[${PYTHON_USEDEP}]
 	dev-cpp/tbb
 	app-arch/zstd
-	<dev-python/protobuf-python-3.12[${PYTHON_USEDEP}]
 	dev-python/pybind11[${PYTHON_USEDEP}]
 	sys-fabric/libibverbs
 	sys-process/numactl
@@ -127,6 +127,7 @@ PATCHES=(
 	"${FILESDIR}"/0002-Don-t-build-libtorch-again-for-PyTorch-1.4.0.patch
 	"${FILESDIR}"/0003-Change-path-to-caffe2-build-dir-made-by-libtorch.patch
 	"${FILESDIR}"/0005-Change-library-directory-according-to-CMake-build.patch
+	"${FILESDIR}/${PN}-1.6.0-fix-roctracer-path.patch"
 )
 
 src_unpack() {
@@ -139,7 +140,9 @@ src_prepare() {
 	if use rocm; then
 		#Allow escaping sandbox
 		addread /dev/kfd
-		addwrite /dev/kfd
+		addpredict /dev/kfd
+		addread /dev/dri
+		addpredict /dev/dri
 	fi
 	cmake-utils_src_prepare
 
@@ -187,6 +190,7 @@ src_prepare() {
 		sed -e '$i  set(HIP_HIPCC_FLAGS -std=c++14 -DCAFFE2_USE_MIOPEN -fPIC -D__HIP_PLATFORM_HCC__=1)' -i ${S}/cmake/public/LoadHIP.cmake
 		sed -e 's,caffe2_detectron_ops_hip SHARED,caffe2_detectron_ops_hip,' -i ${S}/modules/detectron/CMakeLists.txt
 		export PYTORCH_ROCM_ARCH=$(rocminfo | egrep -o "gfx[0-9]+" | uniq | awk -vORS=';' "{print $1}" | sed 's/;$/\n/')
+		sed -e "s:boeff:coeff:" -i "${WORKDIR}/eigen-git-mirror/Eigen/src/Cholesky/LDLT.h"
 	fi
 }
 
@@ -201,6 +205,12 @@ src_configure() {
 		blas="OpenBLAS"
 	fi
 
+	export DEVICE_LIB_PATH=/usr/lib64
+
+	if [[ -z $MAX_JOBS ]]; then
+		export MAX_JOBS=4
+	fi
+
 	local mycmakeargs=(
 		-DTORCH_BUILD_VERSION=${PV}
 		-DTORCH_INSTALL_LIB_DIR=$(get_libdir)
@@ -209,6 +219,7 @@ src_configure() {
 		-DBUILD_PYTHON=$(usex python ON OFF)
 		-DBUILD_SHARED_LIBS=$(usex static OFF ON)
 		-DBUILD_TEST=$(usex test ON OFF)
+		-DMAX_JOBS=$MAX_JOBS
 		-DUSE_ASAN=$(usex asan ON OFF)
 		-DUSE_CUDA=$(usex cuda ON OFF)
 		-DUSE_NCCL=$(usex cuda ON OFF)
